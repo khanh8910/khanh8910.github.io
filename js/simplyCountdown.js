@@ -130,6 +130,7 @@
                 },
                 plural: true,
                 inline: false,
+                enableUtc: true,
                 onEnd: function () {
                     return;
                 },
@@ -138,7 +139,7 @@
                 sectionClass: 'simply-section',
                 amountClass: 'simply-amount',
                 wordClass: 'simply-word',
-                zeroPad: true
+                zeroPad: false
             }, args),
             interval,
             targetDate,
@@ -152,14 +153,27 @@
             seconds,
             cd = document.querySelectorAll(elt);
 
-        targetDate = new Date(
+        targetTmpDate = new Date(
             parameters.year,
-            parameters.month,
+            parameters.month - 1,
             parameters.day,
             parameters.hours,
             parameters.minutes,
             parameters.seconds
         );
+
+        if (parameters.enableUtc) {
+            targetDate = new Date(
+                targetTmpDate.getUTCFullYear(),
+                targetTmpDate.getUTCMonth(),
+                targetTmpDate.getUTCDate(),
+                targetTmpDate.getUTCHours(),
+                targetTmpDate.getUTCMinutes(),
+                targetTmpDate.getUTCSeconds()
+            );
+        } else {
+            targetDate = targetTmpDate;
+        }
 
         Array.prototype.forEach.call(cd, function (countdown) {
             var fullCountDown = createElements(parameters, countdown),
@@ -172,7 +186,14 @@
                     secondWord;
 
                 now = new Date();
-                secondsLeft = (targetDate - now.getTime()) / 1000;
+                if (parameters.enableUtc) {
+                    nowUtc = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
+                        now.getHours(), now.getMinutes(), now.getSeconds());
+                    secondsLeft = (targetDate - nowUtc.getTime()) / 1000;
+
+                } else {
+                    secondsLeft = (targetDate - now.getTime()) / 1000;
+                }
 
                 if (secondsLeft > 0) {
                     days = parseInt(secondsLeft / 86400, 10);
