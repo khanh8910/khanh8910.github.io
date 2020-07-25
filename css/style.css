@@ -5,6 +5,10 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'Sacramento';
+  src: url("../fonts/sacramento/sacramento.ttf");
+}
 /* =======================================================
 *
 * 	Template Style 
@@ -1071,6 +1075,7 @@ form label {
   color: #F14E95;
   font-size: 30px;
 }
+
 .couple-half .groom, .couple-half .bride {
   float: left;
   -webkit-border-radius: 50%;
